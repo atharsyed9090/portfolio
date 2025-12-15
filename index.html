@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Team vs Blue Team - Cybersecurity Portfolio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg-dark: #0d1117;
+      --bg-card: #161b22;
+      --bg-elevated: #21262d;
+      --text-primary: #e6edf3;
+      --text-muted: #8b949e;
+      --border: #30363d;
+      --red: #ff4444;
+      --red-dark: #cc0000;
+      --red-light: #ff6b6b;
+      --blue: #00a2ff;
+      --blue-dark: #0077cc;
+      --blue-light: #4db8ff;
+      --green: #00ff88;
+    }
+    
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Slide System */
+    .slide {
+      min-height: 100vh;
+      padding: 60px 80px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .slide-number {
+      position: absolute;
+      bottom: 20px;
+      right: 40px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    
+    /* Accent Bars */
+    .accent-top-split {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--red) 50%, var(--blue) 50%);
+    }
+    
+    .accent-top-red {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--red);
+    }
+    
+    .accent-top-blue {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--blue);
+    }
+    
+    .accent-top-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--red), var(--blue));
+    }
+    
+    /* Typography */
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    
+    h2 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    h3 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    .badge-red {
+      background: var(--red);
+      color: white;
+    }
+    
+    .badge-blue {
+      background: var(--blue);
+      color: white;
+    }
+    
+    .badge-outline {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--blue);
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+    
+    .card-red {
+      background: linear-gradient(180deg, rgba(255,68,68,0.1) 0%, rgba(255,68,68,0.02) 100%);
+      border: 1px solid rgba(255,68,68,0.3);
+    }
+    
+    .card-blue {
+      background: linear-gradient(180deg, rgba(0,162,255,0.1) 0%, rgba(0,162,255,0.02) 100%);
+      border: 1px solid rgba(0,162,255,0.3);
+    }
+    
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+    
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 20px;
+    }
+    
+    /* Flex utilities */
+    .flex {
+      display: flex;
+    }
+    
+    .flex-col {
+      flex-direction: column;
+    }
+    
+    .items-center {
+      align-items: center;
+    }
+    
+    .justify-center {
+      justify-content: center;
+    }
+    
+    .gap-sm {
+      gap: 12px;
+    }
+    
+    .gap-md {
+      gap: 20px;
+    }
+    
+    .gap-lg {
+      gap: 30px;
+    }
+    
+    .flex-1 {
+      flex: 1;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    /* Colors */
+    .text-red {
+      color: var(--red);
+    }
+    
+    .text-blue {
+      color: var(--blue);
+    }
+    
+    .text-green {
+      color: var(--green);
+    }
+    
+    .text-muted {
+      color: var(--text-muted);
+    }
+    
+    /* Metric Cards */
+    .metric-card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    
+    .metric-card.red {
+      background: rgba(255,68,68,0.1);
+      border-color: rgba(255,68,68,0.3);
+    }
+    
+    .metric-card.blue {
+      background: rgba(0,162,255,0.1);
+      border-color: rgba(0,162,255,0.3);
+    }
+    
+    .metric-card.green {
+      background: rgba(0,255,136,0.1);
+      border-color: rgba(0,255,136,0.3);
+    }
+    
+    .metric-value {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .metric-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    /* Timeline */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+    }
+    
+    .timeline-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    
+    .timeline-line {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin: 4px 0;
+    }
+    
+    .timeline-content {
+      flex: 1;
+      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    
+    .timeline-title {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    
+    .timeline-time {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .timeline-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    /* Tool Cards */
+    .tool-section {
+      background: var(--bg-elevated);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    
+    .tool-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    
+    .tool-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .tool-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      margin-top: 6px;
+    }
+    
+    .tool-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .tool-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    /* Comparison Table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      padding: 16px 20px;
+      background: var(--bg-card);
+      text-align: left;
+    }
+    
+    .comparison-table th:first-child,
+    .comparison-table td:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+    
+    .comparison-table th:last-child,
+    .comparison-table td:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .comparison-table .red-col {
+      border-left: 4px solid var(--red);
+    }
+    
+    .comparison-table .blue-col {
+      border-left: 4px solid var(--blue);
+    }
+    
+    /* Code Block */
+    .code-block {
+      background: var(--bg-dark);
+      border-radius: 6px;
+      padding: 14px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      color: var(--red-light);
+      overflow-x: auto;
+    }
+    
+    /* Phase Cards */
+    .phase-card {
+      background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+      border-radius: 10px;
+      padding: 20px;
+      height: 100%;
+    }
+    
+    .phase-number {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    
+    .phase-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    
+    .phase-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    
+    /* Defense Layer */
+    .defense-layer {
+      border-radius: 12px;
+      padding: 20px;
+      height: 100%;
+    }
+    
+    .defense-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .defense-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+    }
+    
+    .defense-item {
+      background: var(--bg-card);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    /* Threat/Defense Cards */
+    .threat-card {
+      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 16px;
+      border-left: 4px solid;
+      margin-bottom: 12px;
+    }
+    
+    .threat-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    
+    .threat-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    /* Arrow between phases */
+    .arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--red);
+      padding: 0 8px;
+    }
+    
+    /* Skills tags */
+    .skill-tag {
+      display: inline-block;
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin: 4px;
+    }
+    
+    /* CTA Button */
+    .cta-button {
+      background: linear-gradient(90deg, var(--red), var(--blue));
+      color: white;
+      padding: 18px 48px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* VS Badge */
+    .vs-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .vs-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .vs-text {
+      font-size: 36px;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+    
+    /* Section Title with Badge */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    
+    /* Print Styles */
+    @media print {
+      .slide {
+        page-break-after: always;
+        min-height: 100vh;
+      }
+    }
+    
+    /* Navigation hint */
+    .nav-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--bg-elevated);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<section class="slide" style="justify-content: center; align-items: center; background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);">
+  <div class="accent-top-split"></div>
+  
+  <div class="vs-container">
+    <div class="vs-circle" style="background: linear-gradient(135deg, var(--red), var(--red-dark));">RED</div>
+    <span class="vs-text">VS</span>
+    <div class="vs-circle" style="background: linear-gradient(135deg, var(--blue), var(--blue-dark));">BLUE</div>
+  </div>
+  
+  <h1 class="text-center" style="letter-spacing: 3px;">CYBERSECURITY PORTFOLIO</h1>
+  <p class="subtitle text-center" style="font-size: 22px;">Red Team Attack & Blue Team Defense Showcase</p>
+  
+  
+  <div class="flex gap-lg" style="margin-top: 50px;">
+    <span class="text-muted">Penetration Testing</span>
+    <span class="text-muted">•</span>
+    <span class="text-muted">Incident Response</span>
+    <span class="text-muted">•</span>
+    <span class="text-muted">Security Architecture</span>
+  </div>
+  
+  <span class="slide-number">1 / 12</span>
+</section>
+
+<!-- SLIDE 2: Agenda -->
+<section class="slide">
+  <div class="accent-top-gradient"></div>
+  
+  <h2>PORTFOLIO OVERVIEW</h2>
+  <p class="subtitle">What We'll Cover Today</p>
+  
+  <div class="grid-2 flex-1" style="margin-top: 20px;">
+    <!-- Red Team Column -->
+    <div class="card card-red">
+      <div class="flex items-center gap-sm" style="margin-bottom: 24px;">
+        <div style="width: 12px; height: 12px; background: var(--red); border-radius: 50%;"></div>
+        <span class="text-red" style="font-size: 20px; font-weight: 700; letter-spacing: 2px;">RED TEAM</span>
+      </div>
+      
+      <div class="flex flex-col gap-md">
+        <div class="flex gap-sm">
+          <span class="text-red" style="font-weight: 700; min-width: 30px;">01</span>
+          <span>Attack Methodology & Kill Chain</span>
+        </div>
+        <div class="flex gap-sm">
+          <span class="text-red" style="font-weight: 700; min-width: 30px;">02</span>
+          <span>Penetration Testing Tools</span>
+        </div>
+        <div class="flex gap-sm">
+          <span class="text-red" style="font-weight: 700; min-width: 30px;">03</span>
+          <span>Case Study: SQL Injection Attack</span>
+        </div>
+        <div class="flex gap-sm">
+          <span class="text-red" style="font-weight: 700; min-width: 30px;">04</span>
+          <span>Attack Metrics & KPIs</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Blue Team Column -->
+    <div class="card card-blue">
+      <div class="flex items-center gap-sm" style="margin-bottom: 24px;">
+        <div style="width: 12px; height: 12px; background: var(--blue); border-radius: 50%;"></div>
+        <span class="text-blue" style="font-size: 20px; font-weight: 700; letter-spacing: 2px;">BLUE TEAM</span>
+      </div>
+      
+      <div class="flex flex-col gap-md">
+        <div class="flex gap-sm">
+          <span class="text-blue" style="font-weight: 700; min-width: 30px;">01</span>
+          <span>Defense Architecture</span>
+        </div>
+        <div class="flex gap-sm">
+          <span class="text-blue" style="font-weight: 700; min-width: 30px;">02</span>
+          <span>Detection & Monitoring Tools</span>
+        </div>
+        <div class="flex gap-sm">
+          <span class="text-blue" style="font-weight: 700; min-width: 30px;">03</span>
+          <span>Case Study: Attack Blocked</span>
+        </div>
+        <div class="flex gap-sm">
+          <span class="text-blue" style="font-weight: 700; min-width: 30px;">04</span>
+          <span>Defense Metrics & Response Time</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <span class="slide-number">2 / 12</span>
+</section>
+
+<!-- SLIDE 3: Red Team Kill Chain -->
+<section class="slide">
+  <div class="accent-top-red"></div>
+  
+  <div class="section-title">
+    <span class="badge badge-red">RED TEAM</span>
+    <h2 style="margin: 0;">Attack Kill Chain</h2>
+  </div>
+  <p class="subtitle">Structured approach to offensive security testing</p>
+  
+  <div class="flex gap-sm flex-1" style="align-items: stretch;">
+    <!-- Phase 1 -->
+    <div class="phase-card flex-1" style="border-left: 4px solid var(--red);">
+      <div class="phase-number text-red">PHASE 1</div>
+      <div class="phase-title">Reconnaissance</div>
+      <div class="phase-desc">OSINT gathering, port scanning, service enumeration, vulnerability identification</div>
+    </div>
+    
+    <div class="arrow">→</div>
+    
+    <!-- Phase 2 -->
+    <div class="phase-card flex-1" style="border-left: 4px solid var(--red-light);">
+      <div class="phase-number" style="color: var(--red-light);">PHASE 2</div>
+      <div class="phase-title">Weaponization</div>
+      <div class="phase-desc">Exploit selection, payload crafting, attack vector planning, tool preparation</div>
+    </div>
+    
+    <div class="arrow">→</div>
+    
+    <!-- Phase 3 -->
+    <div class="phase-card flex-1" style="border-left: 4px solid #ff8585;">
+      <div class="phase-number" style="color: #ff8585;">PHASE 3</div>
+      <div class="phase-title">Exploitation</div>
+      <div class="phase-desc">Vulnerability exploitation, initial access, foothold establishment</div>
+    </div>
+    
+    <div class="arrow">→</div>
+    
+    <!-- Phase 4 -->
+    <div class="phase-card flex-1" style="border-left: 4px solid #ffaaaa;">
+      <div class="phase-number" style="color: #ffaaaa;">PHASE 4</div>
+      <div class="phase-title">Post-Exploitation</div>
+      <div class="phase-desc">Privilege escalation, lateral movement, persistence, data exfiltration</div>
+    </div>
+  </div>
+  
+  <div class="grid-3" style="margin-top: 30px;">
+    <div class="metric-card red">
+      <div class="metric-value text-red">2 min</div>
+      <div class="metric-label">Average Time to Breach</div>
+    </div>
+    <div class="metric-card red">
+      <div class="metric-value text-red">95%</div>
+      <div class="metric-label">Exploitation Success Rate</div>
+    </div>
+    <div class="metric-card red">
+      <div class="metric-value text-red">SYSTEM</div>
+      <div class="metric-label">Highest Privilege Achieved</div>
+    </div>
+  </div>
+  
+  <span class="slide-number">3 / 12</span>
+</section>
+
+<!-- SLIDE 4: Red Team Tools -->
+<section class="slide">
+  <div class="accent-top-red"></div>
+  
+  <div class="section-title">
+    <span class="badge badge-red">RED TEAM</span>
+    <h2 style="margin: 0;">Attack Tools Arsenal</h2>
+  </div>
+  <p class="subtitle">Professional penetration testing toolkit</p>
+  
+  <div class="grid-4 flex-1" style="margin-top: 10px;">
+    <!-- Reconnaissance -->
+    <div class="tool-section" style="border-top: 4px solid var(--red);">
+      <div class="tool-section-title text-red">RECONNAISSANCE</div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red);"></div>
+        <div>
+          <div class="tool-name">Nmap</div>
+          <div class="tool-desc">Port scanning, service detection, OS fingerprinting</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red);"></div>
+        <div>
+          <div class="tool-name">Shodan</div>
+          <div class="tool-desc">Internet-wide scanning, exposed services OSINT</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red);"></div>
+        <div>
+          <div class="tool-name">Subfinder</div>
+          <div class="tool-desc">Subdomain enumeration, attack surface mapping</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red);"></div>
+        <div>
+          <div class="tool-name">Amass</div>
+          <div class="tool-desc">DNS enumeration, network mapping</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Exploitation -->
+    <div class="tool-section" style="border-top: 4px solid var(--red-light);">
+      <div class="tool-section-title" style="color: var(--red-light);">EXPLOITATION</div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red-light);"></div>
+        <div>
+          <div class="tool-name">Metasploit</div>
+          <div class="tool-desc">Exploit framework, payload generation</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red-light);"></div>
+        <div>
+          <div class="tool-name">Burp Suite Pro</div>
+          <div class="tool-desc">Web app testing, proxy, scanner</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red-light);"></div>
+        <div>
+          <div class="tool-name">SQLMap</div>
+          <div class="tool-desc">SQL injection automation</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: var(--red-light);"></div>
+        <div>
+          <div class="tool-name">Nuclei</div>
+          <div class="tool-desc">Vulnerability scanning, template-based</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Post-Exploitation -->
+    <div class="tool-section" style="border-top: 4px solid #ff8585;">
+      <div class="tool-section-title" style="color: #ff8585;">POST-EXPLOITATION</div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: #ff8585;"></div>
+        <div>
+          <div class="tool-name">Mimikatz</div>
+          <div class="tool-desc">Credential extraction, pass-the-hash</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+    
+       
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: #ff8585;"></div>
+        <div>
+          <div class="tool-name">BloodHound</div>
+          <div class="tool-desc">AD attack path mapping</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: #ff8585;"></div>
+        <div>
+          <div class="tool-name">Impacket</div>
+          <div class="tool-desc">Network protocols, lateral movement</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Social Engineering -->
+    <div class="tool-section" style="border-top: 4px solid #ffaaaa;">
+      <div class="tool-section-title" style="color: #ffaaaa;">SOCIAL ENGINEERING</div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: #ffaaaa;"></div>
+        <div>
+          <div class="tool-name">Gophish</div>
+          <div class="tool-desc">Phishing campaigns, awareness testing</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: #ffaaaa;"></div>
+        <div>
+          <div class="tool-name">SET</div>
+          <div class="tool-desc">Social engineering toolkit</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: #ffaaaa;"></div>
+        <div>
+          <div class="tool-name">Evilginx2</div>
+          <div class="tool-desc">MFA bypass, credential interception</div>
+        </div>
+      </div>
+      
+      <div class="tool-item">
+        <div class="tool-dot" style="background: #ffaaaa;"></div>
+        <div>
+          <div class="tool-name">King Phisher</div>
+          <div class="tool-desc">Campaign management, reporting</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <span class="slide-number">4 / 12</span>
+</section>
+
+<!-- SLIDE 5: Red Team Case Study -->
+<section class="slide">
+  <div class="accent-top-red"></div>
+  
+  <div class="section-title">
+    <span class="badge badge-red">CASE STUDY</span>
+    <h2 style="margin: 0;">SQL Injection Attack</h2>
+  </div>
+  <p class="subtitle">iGaming Platform - Payment Processing Module</p>
+  
+  <div class="grid-2 flex-1" style="margin-top: 10px;">
+    <!-- Timeline -->
+    <div>
+      <h3 class="text-red" style="margin-bottom: 20px; font-size: 14px; letter-spacing: 1px;">ATTACK TIMELINE</h3>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: var(--red);">1</div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Discovery</span>
+              <span class="timeline-time">00:00</span>
+            </div>
+            <div class="timeline-desc">Identified vulnerable search parameter in user lookup functionality</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: var(--red-light);">2</div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Exploitation</span>
+              <span class="timeline-time">00:45</span>
+            </div>
+            <div class="timeline-desc">Executed UNION-based SQL injection to enumerate database structure</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: #ff8585;">3</div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Database Access</span>
+              <span class="timeline-time">01:30</span>
+            </div>
+            <div class="timeline-desc">Successfully dumped user credentials and session tokens</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: #ffaaaa;">4</div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Data Exfiltration</span>
+              <span class="timeline-time">02:00</span>
+            </div>
+            <div class="timeline-desc">Extracted payment records and PII (simulated in controlled environment)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Details -->
+    <div class="flex flex-col gap-md">
+      <div class="card" style="border: 1px solid var(--border);">
+        <h3 class="text-red" style="font-size: 12px; letter-spacing: 1px; margin-bottom: 12px;">PAYLOAD USED</h3>
+        <div class="code-block">
+          ' UNION SELECT username, password, email, cc_last4 FROM users--
+        </div>
+      </div>
+      
+      <div class="card card-red">
+        <h3 class="text-red" style="font-size: 12px; letter-spacing: 1px; margin-bottom: 16px;">IMPACT ASSESSMENT</h3>
+        
+        <div class="flex flex-col gap-sm">
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">Records Exposed</span>
+            <span class="text-red" style="font-weight: 700;">50,000+</span>
+          </div>
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">Time to Breach</span>
+            <span class="text-red" style="font-weight: 700;">2 minutes</span>
+          </div>
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">Severity Rating</span>
+            <span class="text-red" style="font-weight: 700;">CRITICAL</span>
+          </div>
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">CVSS Score</span>
+            <span class="text-red" style="font-weight: 700;">9.8 / 10</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card" style="background: var(--bg-elevated);">
+        <span class="text-muted" style="font-size: 12px;">TOOLS USED: </span>
+        <span style="font-size: 14px;">Burp Suite Pro, SQLMap, Custom Python Scripts</span>
+      </div>
+    </div>
+  </div>
+  
+  <span class="slide-number">5 / 12</span>
+</section>
+
+<!-- SLIDE 6: Blue Team Defense Architecture -->
+<section class="slide">
+  <div class="accent-top-blue"></div>
+  
+  <div class="section-title">
+    <span class="badge badge-blue">BLUE TEAM</span>
+    <h2 style="margin: 0;">Defense Architecture</h2>
+  </div>
+  <p class="subtitle">Defense in Depth - Multiple layers of protection</p>
+  
+  <div class="grid-4 flex-1" style="margin-top: 10px;">
+    <!-- Layer 1 -->
+    <div class="defense-layer" style="background: linear-gradient(180deg, rgba(0,162,255,0.15) 0%, rgba(0,162,255,0.05) 100%); border: 1px solid rgba(0,162,255,0.4);">
+      <div class="defense-header">
+        <div class="defense-number" style="background: var(--blue);">1</div>
+        <span class="text-blue" style="font-weight: 700;">PERIMETER</span>
+      </div>
+      <div class="defense-item">Web Application Firewall (WAF)</div>
+      <div class="defense-item">DDoS Protection (Cloudflare)</div>
+      <div class="defense-item">Rate Limiting</div>
+      <div class="defense-item">Geo-blocking</div>
+      <div class="defense-item">Bot Detection</div>
+    </div>
+    
+    <!-- Layer 2 -->
+    <div class="defense-layer" style="background: linear-gradient(180deg, rgba(0,162,255,0.12) 0%, rgba(0,162,255,0.04) 100%); border: 1px solid rgba(0,162,255,0.3);">
+      <div class="defense-header">
+        <div class="defense-number" style="background: var(--blue-dark);">2</div>
+        <span style="color: var(--blue-light); font-weight: 700;">NETWORK</span>
+      </div>
+      <div class="defense-item">IDS/IPS (Snort/Suricata)</div>
+      <div class="defense-item">Network Segmentation</div>
+      <div class="defense-item">Traffic Analysis</div>
+      <div class="defense-item">VPN & Zero Trust</div>
+      <div class="defense-item">Firewall Rules</div>
+    </div>
+    
+    <!-- Layer 3 -->
+    <div class="defense-layer" style="background: linear-gradient(180deg, rgba(0,162,255,0.09) 0%, rgba(0,162,255,0.03) 100%); border: 1px solid rgba(0,162,255,0.25);">
+      <div class="defense-header">
+        <div class="defense-number" style="background: #005599;">3</div>
+        <span style="color: #66c2ff; font-weight: 700;">APPLICATION</span>
+      </div>
+      <div class="defense-item">Input Validation</div>
+      <div class="defense-item">Parameterized Queries</div>
+      <div class="defense-item">SAST/DAST Scanning</div>
+      <div class="defense-item">Secure Code Review</div>
+      <div class="defense-item">Session Management</div>
+    </div>
+    
+    <!-- Layer 4 -->
+    <div class="defense-layer" style="background: linear-gradient(180deg, rgba(0,162,255,0.06) 0%, rgba(0,162,255,0.02) 100%); border: 1px solid rgba(0,162,255,0.2);">
+      <div class="defense-header">
+        <div class="defense-number" style="background: #003366;">4</div>
+        <span style="color: #99d6ff; font-weight: 700;">DATA</span>
+      </div>
+      <div class="defense-item">Encryption at Rest (AES-256)</div>
+      <div class="defense-item">Encryption in Transit (TLS 1.3)</div>
+      <div class="defense-item">Access Controls (RBAC)</div>
+      <div class="defense-item">Data Masking</div>
+      <div class="defense-item">Backup & Recovery</div>
+    </div>
+  </div>
+  
+  <div class="card text-center" style="margin-top: 20px; background: var(--bg-card);">
+    <span class="text-blue" style="font-size: 28px; font-weight: 700;">DEFENSE IN DEPTH</span>
+    <p class="text-muted" style="margin-top: 8px;">Multiple layers ensure no single point of failure • Each layer adds friction for attackers</p>
+  </div>
+  
+  <span class="slide-number">6 / 12</span>
+</section>
+
+<!-- SLIDE 7: Blue Team Tools -->
+<section class="slide">
+  <div class="accent-top-blue"></div>
+  
+  <div class="section-title">
+    <span class="badge badge-blue">BLUE TEAM</span>
+    <h2 style="margin: 0;">Detection & Monitoring</h2>
+  </div>
+  <p class="subtitle">24/7 Security Operations Center capabilities</p>
+  
+  <div class="grid-2 flex-1" style="margin-top: 10px;">
+    <!-- Tools Column -->
+    <div class="flex flex-col gap-md">
+      <!-- SIEM -->
+      <div class="card" style="border-left: 4px solid var(--blue);">
+        <h3 class="text-blue" style="font-size: 13px; letter-spacing: 1px; margin-bottom: 16px;">SIEM PLATFORM</h3>
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="background: var(--bg-card); text-align: center; padding: 16px;">
+            <div style="font-weight: 600; font-size: 16px;">Splunk Enterprise</div>
+            <div class="text-muted" style="font-size: 12px;">Log aggregation & analysis</div>
+          </div>
+          <div class="card" style="background: var(--bg-card); text-align: center; padding: 16px;">
+            <div style="font-weight: 600; font-size: 16px;">ELK Stack</div>
+            <div class="text-muted" style="font-size: 12px;">Search & visualization</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- IDS/IPS -->
+      <div class="card" style="border-left: 4px solid var(--blue-light);">
+        <h3 style="color: var(--blue-light); font-size: 13px; letter-spacing: 1px; margin-bottom: 16px;">INTRUSION DETECTION</h3>
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="background: var(--bg-card); text-align: center; padding: 16px;">
+            <div style="font-weight: 600; font-size: 16px;">Snort</div>
+            <div class="text-muted" style="font-size: 12px;">Network IDS/IPS</div>
+          </div>
+          <div class="card" style="background: var(--bg-card); text-align: center; padding: 16px;">
+            <div style="font-weight: 600; font-size: 16px;">Suricata</div>
+            <div class="text-muted" style="font-size: 12px;">High-performance IDS</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- EDR -->
+      <div class="card" style="border-left: 4px solid #66c2ff;">
+        <h3 style="color: #66c2ff; font-size: 13px; letter-spacing: 1px; margin-bottom: 16px;">ENDPOINT DETECTION</h3>
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="background: var(--bg-card); text-align: center; padding: 16px;">
+            <div style="font-weight: 600; font-size: 16px;">CrowdStrike</div>
+            <div class="text-muted" style="font-size: 12px;">EDR & threat intel</div>
+          </div>
+          <div class="card" style="background: var(--bg-card); text-align: center; padding: 16px;">
+            <div style="font-weight: 600; font-size: 16px;">Velociraptor</div>
+            <div class="text-muted" style="font-size: 12px;">Digital forensics</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Metrics Column -->
+    <div class="flex flex-col gap-md">
+      <h3 class="text-blue" style="font-size: 13px; letter-spacing: 1px;">LIVE MONITORING METRICS</h3>
+      
+      <div class="grid-2" style="gap: 16px;">
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">1M+</div>
+          <div class="metric-label">Events Processed Daily</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">< 60s</div>
+          <div class="metric-label">Mean Time to Detect</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">99.7%</div>
+          <div class="metric-label">Detection Accuracy</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">24/7</div>
+          <div class="metric-label">SOC Coverage</div>
+        </div>
+      </div>
+      
+      <div class="card" style="background: var(--bg-elevated);">
+        <span class="text-muted" style="font-size: 12px; font-weight: 600;">ALERT CATEGORIES MONITORED</span>
+        <div style="margin-top: 12px;">
+          <span class="skill-tag">SQLi Attempts</span>
+          <span class="skill-tag">XSS Vectors</span>
+          <span class="skill-tag">Brute Force</span>
+          <span class="skill-tag">DDoS Patterns</span>
+          <span class="skill-tag">Anomalous Behavior</span>
+          <span class="skill-tag">Credential Stuffing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <span class="slide-number">7 / 12</span>
+</section>
+
+<!-- SLIDE 8: Blue Team Case Study -->
+<section class="slide">
+  <div class="accent-top-blue"></div>
+  
+  <div class="section-title">
+    <span class="badge badge-blue">CASE STUDY</span>
+    <h2 style="margin: 0;">Attack Blocked: WAF Defense</h2>
+  </div>
+  <p class="subtitle">Real-time detection and mitigation of SQL Injection attempt</p>
+  
+  <div class="grid-2 flex-1" style="margin-top: 10px;">
+    <!-- Timeline -->
+    <div>
+      <h3 class="text-blue" style="margin-bottom: 20px; font-size: 14px; letter-spacing: 1px;">DEFENSE TIMELINE</h3>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: var(--blue);">1</div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">WAF Detection</span>
+              <span class="timeline-time text-green">00:00:03</span>
+            </div>
+            <div class="timeline-desc">Malicious pattern identified in HTTP request parameter</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: var(--blue-light);">2</div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Request Blocked</span>
+              <span class="timeline-time text-green">00:00:05</span>
+            </div>
+            <div class="timeline-desc">SQLi payload blocked at perimeter, 403 returned to attacker</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: #66c2ff;">3</div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">SIEM Alert</span>
+              <span class="timeline-time text-green">00:00:12</span>
+            </div>
+            <div class="timeline-desc">High-priority incident created, SOC analyst notified via PagerDuty</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <div class="timeline-dot" style="background: #99d6ff;">4</div>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">IP Blacklisted</span>
+              <span class="timeline-time text-green">00:01:00</span>
+            </div>
+            <div class="timeline-desc">Attacker IP added to global blocklist, threat intelligence updated</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Details -->
+    <div class="flex flex-col gap-md">
+      <div class="card" style="border: 1px solid var(--border);">
+        <h3 class="text-blue" style="font-size: 12px; letter-spacing: 1px; margin-bottom: 12px;">WAF RULE TRIGGERED</h3>
+        <div class="code-block" style="color: var(--green);">
+          RULE 942100: SQL Injection Attack Detected via libinjection
+        </div>
+      </div>
+      
+      <div class="card" style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3);">
+        <h3 class="text-green" style="font-size: 12px; letter-spacing: 1px; margin-bottom: 16px;">DEFENSE SUCCESS</h3>
+        
+        <div class="flex flex-col gap-sm">
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">Time to Detect</span>
+            <span class="text-green" style="font-weight: 700;">3 seconds</span>
+          </div>
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">Time to Block</span>
+            <span class="text-green" style="font-weight: 700;">5 seconds</span>
+          </div>
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">Data Exposed</span>
+            <span class="text-green" style="font-weight: 700;">NONE</span>
+          </div>
+          <div class="flex" style="justify-content: space-between;">
+            <span class="text-muted">Attack Status</span>
+            <span class="text-green" style="font-weight: 700;">BLOCKED ✓</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card" style="background: var(--bg-elevated);">
+        <span class="text-muted" style="font-size: 12px;">DEFENSES ACTIVE: </span>
+        <span style="font-size: 14px;">Imperva WAF, Splunk SIEM, ModSecurity, CrowdStrike</span>
+      </div>
+    </div>
+  </div>
+  
+  <span class="slide-number">8 / 12</span>
+</section>
+
+<!-- SLIDE 9: Red vs Blue Comparison -->
+<section class="slide">
+  <div class="accent-top-split"></div>
+  
+  <h2 class="text-center">RED vs BLUE: The Match Results</h2>
+  <p class="subtitle text-center">Side-by-side comparison of attack and defense capabilities</p>
+  
+  <table class="comparison-table flex-1">
+    <thead>
+      <tr>
+        <th style="background: var(--bg-elevated); text-align: center;">CATEGORY</th>
+        <th class="red-col" style="background: rgba(255,68,68,0.15); text-align: center;">
+          <span class="text-red" style="font-weight: 700;">RED TEAM (ATTACK)</span>
+        </th>
+        <th class="blue-col" style="background: rgba(0,162,255,0.15); text-align: center;">
+          <span class="text-blue" style="font-weight: 700;">BLUE TEAM (DEFENSE)</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight: 600;">Tools Used</td>
+        <td class="red-col">Metasploit, Burp Suite, SQLMap, Cobalt Strike, BloodHound</td>
+        <td class="blue-col">Splunk, Snort, CrowdStrike, Imperva WAF, Velociraptor</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Key Scenario</td>
+        <td class="red-col">SQL Injection on payment processing module</td>
+        <td class="blue-col">WAF + SIEM real-time detection & blocking</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Outcome</td>
+        <td class="red-col"><span class="text-red" style="font-weight: 600;">Data exfiltration achieved (simulated)</span></td>
+        <td class="blue-col"><span class="text-green" style="font-weight: 600;">Attack blocked at perimeter ✓</span></td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Primary Metric</td>
+        <td class="red-col">
+          <div class="metric-card red" style="padding: 16px;">
+            <div class="metric-value text-red" style="font-size: 28px;">2 min</div>
+            <div class="metric-label">Time to Breach</div>
+          </div>
+        </td>
+        <td class="blue-col">
+          <div class="metric-card blue" style="padding: 16px;">
+            <div class="metric-value text-blue" style="font-size: 28px;">< 1 min</div>
+            <div class="metric-label">Time to Detect & Block</div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <span class="slide-number">9 / 12</span>
+</section>
+
+<!-- SLIDE 10: Metrics Dashboard -->
+<section class="slide">
+  <div class="accent-top-split"></div>
+  
+  <h2 class="text-center">Performance Metrics Dashboard</h2>
+  <p class="subtitle text-center">Key Performance Indicators for Security Operations</p>
+  
+  <div class="flex flex-col gap-lg flex-1" style="margin-top: 20px;">
+    <!-- Red Team Row -->
+    <div class="flex items-center gap-md">
+      <div style="writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);">
+        <span class="badge badge-red">RED TEAM</span>
+      </div>
+      <div class="grid-4 flex-1">
+        <div class="metric-card red">
+          <div class="metric-value text-red">95%</div>
+          <div class="metric-label">Exploitation Success Rate</div>
+        </div>
+        <div class="metric-card red">
+          <div class="metric-value text-red">2:15</div>
+          <div class="metric-label">Avg Time to Breach</div>
+        </div>
+        <div class="metric-card red">
+          <div class="metric-value text-red">47</div>
+          <div class="metric-label">Vulnerabilities Found</div>
+        </div>
+        <div class="metric-card red">
+          <div class="metric-value text-red">12</div>
+          <div class="metric-label">Critical Findings</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Blue Team Row -->
+    <div class="flex items-center gap-md">
+      <div style="writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);">
+        <span class="badge badge-blue">BLUE TEAM</span>
+      </div>
+      <div class="grid-4 flex-1">
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">99.7%</div>
+          <div class="metric-label">Detection Rate</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">< 60s</div>
+          <div class="metric-label">Mean Time to Detect</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">5 min</div>
+          <div class="metric-label">Mean Time to Respond</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-value text-blue">0</div>
+          <div class="metric-label">Successful Breaches</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Combined Row -->
+    <div class="grid-3">
+      <div class="metric-card green">
+        <div class="metric-value text-green">100%</div>
+        <div class="metric-label">Critical Vulns Remediated</div>
+      </div>
+      <div class="metric-card" style="background: var(--bg-elevated);">
+        <div class="metric-value" style="color: var(--text-primary);">15</div>
+        <div class="metric-label">Security Assessments/Year</div>
+      </div>
+      <div class="metric-card" style="background: var(--bg-elevated);">
+        <div class="metric-value" style="color: var(--text-primary);">SOC2</div>
+        <div class="metric-label">Compliance Maintained</div>
+      </div>
+    </div>
+  </div>
+  
+  <span class="slide-number">10 / 12</span>
+</section>
+
+<section class="slide">
+  <div class="accent-top-gradient"></div>
+  
+  <h2 class="text-center">iGaming Security Challenges</h2>
+  <p class="subtitle text-center">Industry-specific threats and tailored defense strategies</p>
+  
+  <div class="grid-2 flex-1" style="margin-top: 20px;">
+    <!-- Threats Column -->
+    <div>
+      <div class="card card-red" style="margin-bottom: 20px; padding: 16px;">
+        <span class="text-red" style="font-size: 14px; font-weight: 700; letter-spacing: 1px;">THREAT LANDSCAPE</span>
+      </div>
+      
+      <div class="threat-card" style="border-color: var(--red);">
+        <div class="threat-title">Payment Fraud</div>
+        <div class="threat-desc">Stolen credit cards, bonus abuse schemes, money laundering attempts, chargeback fraud</div>
+      </div>
+      
+      <div class="threat-card" style="border-color: var(--red-light);">
+        <div class="threat-title">Account Takeover (ATO)</div>
+        <div class="threat-desc">Credential stuffing attacks, session hijacking, MFA bypass, SIM swapping</div>
+      </div>
+      
+      <div class="threat-card" style="border-color: #ff8585;">
+        <div class="threat-title">Game Manipulation</div>
+        <div class="threat-desc">RNG exploitation attempts, API abuse, odds manipulation, collusion detection evasion</div>
+      </div>
+      
+      <div class="threat-card" style="border-color: #ffaaaa;">
+        <div class="threat-title">DDoS Attacks</div>
+        <div class="threat-desc">Service disruption during high-traffic events (major sports, tournaments)</div>
+      </div>
+    </div>
+    
+    <!-- Defenses Column -->
+    <div>
+      <div class="card card-blue" style="margin-bottom: 20px; padding: 16px;">
+        <span class="text-blue" style="font-size: 14px; font-weight: 700; letter-spacing: 1px;">DEFENSE STRATEGIES</span>
+      </div>
+      
+      <div class="threat-card" style="border-color: var(--blue);">
+        <div class="threat-title">Fraud Detection ML</div>
+        <div class="threat-desc">Real-time transaction scoring, behavioral analytics, velocity checks, device fingerprinting</div>
+      </div>
+      
+      <div class="threat-card" style="border-color: var(--blue-light);">
+        <div class="threat-title">Strong Authentication</div>
+        <div class="threat-desc">Adaptive MFA, risk-based authentication, biometrics, hardware tokens for high-value accounts</div>
+      </div>
+      
+      <div class="threat-card" style="border-color: #66c2ff;">
+        <div class="threat-title">API Security</div>
+        <div class="threat-desc">Rate limiting, request signing, anomaly detection, GraphQL depth limiting</div>
+      </div>
+      
+      <div class="threat-card" style="border-color: #99d6ff;">
+        <div class="threat-title">Cloud Protection</div>
+        <div class="threat-desc">Global CDN, auto-scaling, geographic distribution, Anycast DNS</div>
+      </div>
+    </div>
+  </div>
+  
+  <span class="slide-number">11 / 12</span>
+</section>
+
+<!-- SLIDE 12: Closing -->
+<section class="slide" style="justify-content: center; align-items: center; background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);">
+  <div style="position: absolute; bottom: 0; left: 0; width: 50%; height: 6px; background: var(--red);"></div>
+  <div style="position: absolute; bottom: 0; right: 0; width: 50%; height: 6px; background: var(--blue);"></div>
+  
+  <div class="flex gap-lg" style="margin-bottom: 40px;">
+    <div class="metric-card red" style="padding: 20px 30px;">
+      <div class="metric-value text-red" style="font-size: 28px;">95%</div>
+      <div class="metric-label">Exploitation Rate</div>
+    </div>
+    <div class="metric-card blue" style="padding: 20px 30px;">
+      <div class="metric-value text-blue" style="font-size: 28px;">99.7%</div>
+      <div class="metric-label">Detection Rate</div>
+    </div>
+    <div class="metric-card green" style="padding: 20px 30px;">
+      <div class="metric-value text-green" style="font-size: 28px;">0</div>
+      <div class="metric-label">Data Breaches</div>
+    </div>
+  </div>
+  
+  <h1 style="font-size: 44px; margin-bottom: 10px;">Ready to Secure Your Platform</h1>
+  <p class="subtitle text-center" style="font-size: 20px; margin-bottom: 30px;">End-to-end security expertise for iGaming operations</p>
+  
+  <div style="margin-bottom: 40px;">
+    <span class="skill-tag">Penetration Testing</span>
+    <span class="skill-tag">Incident Response</span>
+    <span class="skill-tag">Security Architecture</span>
+    <span class="skill-tag">Compliance (SOC2/ISO)</span>
+    <span class="skill-tag">Threat Hunting</span>
+  </div>
+  
+
+  
+  <p class="text-muted" style="margin-top: 50px; font-size: 14px;">Athar Syed • Security Professional • atharsyed12@gmail.com </p>
+  <p style="text-align:center; margin-top:12px; font-size:14px; color:var(--muted);">
+    OSCP • OSWP • CAP
+  </p>
+  
+  
+  <span class="slide-number">12 / 12</span>
+</section>
+
+
+</body>
+</html>
